@@ -1,0 +1,88 @@
+﻿@model IEnumerable<WebApplication2.Models.Post>
+@{
+    Layout = null;
+    var user = ViewBag.TargetUser as WebApplication2.Models.User;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@user.Username Profili</title>
+    <style>
+        body {
+            margin: 0;
+            background: #0f0c29;
+            color: white;
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            justify-content: center;
+            padding: 40px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 700px;
+        }
+
+        .profile-header {
+            background: rgba(255,255,255,0.1);
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            margin-bottom: 30px;
+            border: 1px solid #6c63ff;
+        }
+
+        .avatar {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(45deg, #6c63ff, #00d2ff);
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            font-size: 40px;
+            line-height: 100px;
+        }
+
+        .post {
+            background: rgba(255,255,255,0.03);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border-left: 4px solid #00d2ff;
+        }
+
+        .back-link {
+            color: #6c63ff;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/Home/UserDashboard" class="back-link">← Ana Sayfaya Dön</a>
+
+        <div class="profile-header">
+            <div class="avatar">👤</div>
+            <h1>@@@user.Username</h1>
+            <p>📍 @(user.City ?? "Şehir Belirtilmemiş") | 🎂 @user.Age Yaş</p>
+            @if (!string.IsNullOrEmpty(user.About))
+            {
+                <div style="font-style: italic; background: rgba(0,0,0,0.2); padding: 15px; border-radius: 10px; margin-top: 15px;">
+                    "@user.About"
+                </div>
+            }
+        </div>
+
+        <h3>Paylaşımlar (@Model.Count())</h3>
+        @foreach (var post in Model)
+        {
+            <div class="post">
+                <p>@post.Content</p>
+                <small style="color: #666;">📅 @post.CreatedDate.ToString("dd.MM.yyyy HH:mm")</small>
+            </div>
+        }
+    </div>
+</body>
+</html>

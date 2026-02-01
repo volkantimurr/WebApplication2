@@ -1,0 +1,240 @@
+﻿@model IEnumerable<WebApplication2.Models.Post>
+@{
+    Layout = null;
+    var likedIds = ViewBag.UserLikedPostIds as List<int> ?? new List<int>();
+    var allComments = ViewBag.Comments as List<WebApplication2.Models.Comment> ?? new List<WebApplication2.Models.Comment>();
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ana Sayfa - Akış</title>
+    <style>
+        body {
+            margin: 0;
+            background: #0f0c29;
+            color: white;
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            justify-content: center;
+            padding: 30px;
+        }
+
+        .main-layout {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 25px;
+            width: 100%;
+            max-width: 1100px;
+        }
+
+        .feed-area {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .share-box {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 15px;
+            border: 1px solid rgba(108, 99, 255, 0.3);
+        }
+
+        textarea {
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: white;
+            resize: none;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .btn-share {
+            background: #6c63ff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            float: right;
+            transition: 0.3s;
+        }
+
+        .post {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 20px;
+            border-radius: 15px;
+            border-left: 4px solid #6c63ff;
+            position: relative;
+        }
+
+        .post-user {
+            font-weight: bold;
+            color: #00d2ff;
+        }
+
+        .btn-like {
+            border: 1px solid transparent;
+            padding: 6px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+            font-weight: bold;
+        }
+
+        .comments-section {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .comment-item {
+            background: rgba(255,255,255,0.05);
+            padding: 8px 12px;
+            border-radius: 10px;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .comment-user {
+            color: #6c63ff;
+            font-weight: bold;
+            margin-right: 5px;
+        }
+
+        .comment-input {
+            flex: 1;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(108, 99, 255, 0.3);
+            color: white;
+            border-radius: 8px;
+            padding: 8px 12px;
+            outline: none;
+        }
+
+        /* Profil Sidebar */
+        .profile-sidebar {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 25px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            height: fit-content;
+            text-align: center;
+            position: sticky;
+            top: 30px;
+        }
+
+        .avatar {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(45deg, #6c63ff, #00d2ff);
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            line-height: 70px;
+            font-size: 25px;
+        }
+
+        /* Arama Kutusu Stili */
+        .search-input {
+            width: 100%;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(108, 99, 255, 0.3);
+            color: white;
+            border-radius: 10px;
+            padding: 10px;
+            outline: none;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-layout">
+        <div class="feed-area">
+            @* Paylaşım Kutusu *@
+            <div class="share-box">
+                <form asp-action="SharePost" method="post">
+                    <textarea name="content" rows="3" placeholder="Bugün ne düşünüyorsun?" required></textarea>
+                    <button type="submit" class="btn-share">Paylaş</button>
+                    <div style="clear: both;"></div>
+                </form>
+            </div>
+
+            @* Postlar *@
+            @foreach (var post in Model)
+            {
+                bool isLiked = likedIds.Contains(post.Id);
+                <div class="post">
+                    <span class="post-user">@@@post.Username</span>
+                    @if (ViewBag.User != null && post.UserId == ViewBag.User.Id)
+                    {
+                        <form asp-action="DeletePost" method="post" style="position: absolute; right: 20px; top: 20px;">
+                            <input type="hidden" name="id" value="@post.Id" />
+                            <button type="submit" style="background:none; border:none; color:#ff4757; cursor:pointer; font-size:18px;">🗑️</button>
+                        </form>
+                    }
+                    <p style="margin: 15px 0; line-height: 1.5;">@post.Content</p>
+                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                        <form asp-action="LikePost" method="post">
+                            <input type="hidden" name="id" value="@post.Id" />
+                            <button type="submit" class="btn-like" style="background: @(isLiked ? "rgba(255, 71, 87, 0.2)" : "rgba(255, 255, 255, 0.1)"); color: @(isLiked ? "#ff4757" : "white"); border-color: @(isLiked ? "#ff4757" : "transparent");">
+                                @(isLiked ? "❤️" : "🤍") @post.LikeCount
+                            </button>
+                        </form>
+                        <span style="font-size: 11px; color: #666;">🕒 @post.CreatedDate.ToString("dd.MM HH:mm")</span>
+                    </div>
+
+                    <div class="comments-section">
+                        @foreach (var comment in allComments.Where(c => c.PostId == post.Id))
+                        {
+                            <div class="comment-item">
+                                <span class="comment-user">@@@comment.Username</span>
+                                <span>@comment.Content</span>
+                            </div>
+                        }
+                        <form asp-action="AddComment" method="post" style="display: flex; gap: 10px; margin-top: 15px;">
+                            <input type="hidden" name="postId" value="@post.Id" />
+                            <input type="text" name="commentContent" class="comment-input" placeholder="Yorum yaz..." required>
+                            <button type="submit" style="background: #6c63ff; color: white; border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer;">Gönder</button>
+                        </form>
+                    </div>
+                </div>
+            }
+        </div>
+
+        @* Sağ Sidebar *@
+        <div class="profile-sidebar">
+            <form asp-action="SearchUser" method="get" style="margin-bottom: 25px; display: flex; gap: 5px; background: rgba(255,255,255,0.05); padding: 5px; border-radius: 12px; border: 1px solid rgba(108, 99, 255, 0.2);">
+                <input type="text" name="searchTerm" placeholder="Kullanıcı ara..." required
+                       style="flex: 1; background: transparent; border: none; color: white; padding: 8px 12px; outline: none; font-size: 14px;">
+
+                <button type="submit" style="background: #6c63ff; border: none; color: white; width: 35px; height: 35px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.3s; flex-shrink: 0;">
+                    <span style="font-size: 16px;">🔍</span>
+                </button>
+            </form>
+
+            <div class="avatar">👤</div>
+            @if (ViewBag.User != null)
+            {
+                <h3 style="margin: 10px 0;">@ViewBag.User.Username</h3>
+                <div style="text-align: left; font-size: 14px; color: #b8b8d1; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;">
+                    <p>📍 <strong>Şehir:</strong> @(ViewBag.User.City ?? "Belirtilmemiş")</p>
+                    <p>🎂 <strong>Bilgi:</strong> @(ViewBag.User.Age) Yaş | @ViewBag.User.Gender</p>
+                    @if (!string.IsNullOrEmpty(ViewBag.User.About))
+                    {
+                        <div style="font-style: italic; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 8px; margin-top: 10px;">
+                            "@ViewBag.User.About"
+                        </div>
+                    }
+                </div>
+            }
+            <div style="margin-top: 20px;">
+                <a href="/Home/ProfileSettings" style="display:block; background:rgba(255,255,255,0.1); color:white; padding:10px; border-radius:10px; text-decoration:none; margin-bottom:10px;">⚙️ Ayarlar</a>
+                <a href="/Account/Logout" style="color: #ff4757; font-size: 12px; text-decoration: none;">Güvenli Çıkış</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

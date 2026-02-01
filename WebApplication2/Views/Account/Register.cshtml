@@ -1,0 +1,164 @@
+﻿@model WebApplication2.Models.User
+@{
+    // Sayfanın Layout'tan etkilenmemesi ve tam ekran olması için:
+    Layout = null;
+    ViewData["Title"] = "Yeni Kayıt";
+}
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #1e1e2f, #2c2c44);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .register-card {
+            background: rgba(58, 58, 79, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            width: 400px;
+            text-align: center;
+            color: white;
+            /* Giriş animasyonu */
+            opacity: 0;
+            animation: fadeInCard 0.8s ease-out forwards;
+        }
+
+            .register-card h2 {
+                margin-bottom: 10px;
+                font-weight: 600;
+                color: #ffffff;
+            }
+
+            .register-card p {
+                color: #8a8aab;
+                font-size: 14px;
+                margin-bottom: 25px;
+            }
+
+        .input-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+            .input-group label {
+                display: block;
+                margin-bottom: 8px;
+                font-size: 14px;
+                color: #b8b8d1;
+            }
+
+            .input-group input {
+                width: 100%;
+                padding: 12px 15px;
+                border-radius: 10px;
+                border: 2px solid #4a4a6a;
+                background: #2c2c44;
+                color: white;
+                font-size: 16px;
+                transition: all 0.3s ease;
+            }
+
+                .input-group input:focus {
+                    outline: none;
+                    border-color: #00d2ff;
+                    box-shadow: 0 0 8px rgba(0, 210, 255, 0.4);
+                }
+
+        .btn-register {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(to right, #6c63ff, #00d2ff);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, opacity 0.3s;
+            margin-top: 15px;
+        }
+
+            .btn-register:hover {
+                opacity: 0.9;
+                transform: translateY(-2px);
+            }
+
+        .register-footer {
+            margin-top: 20px;
+            font-size: 13px;
+            color: #8a8aab;
+        }
+
+            .register-footer a {
+                color: #00d2ff;
+                text-decoration: none;
+                font-weight: bold;
+            }
+
+        /* Giriş Animasyonu */
+        @@keyframes fadeInCard {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="register-card">
+        <h2>Kayıt Ol</h2>
+        <p>Aramıza katılmak için formu doldurun</p>
+
+        <form asp-action="Register" asp-controller="Account" method="post">
+
+            <div class="input-group">
+                <label>Kullanıcı Adı</label>
+                <input type="text" asp-for="Username" placeholder="Kullanıcı adınızı seçin" required />
+            </div>
+
+            <div class="input-group">
+                <label>E-Posta</label>
+                <input type="email" asp-for="Email" placeholder="ornek@mail.com" required />
+            </div>
+
+            <div class="input-group">
+                <label>Şifre</label>
+                <input type="password" asp-for="Password" placeholder="••••••••" required />
+            </div>
+
+            <button type="submit" class="btn-register">Hesabı Oluştur</button>
+
+        </form>
+
+        <div class="register-footer">
+            Zaten üye misiniz? <a href="/Account/Login">Giriş Yap</a>
+        </div>
+    </div>
+
+</body>
+</html>

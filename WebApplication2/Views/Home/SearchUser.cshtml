@@ -1,0 +1,123 @@
+﻿@model IEnumerable<WebApplication2.Models.User>
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Arama Sonuçları</title>
+    <style>
+        body {
+            margin: 0;
+            background: #0f0c29;
+            color: white;
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            justify-content: center;
+            padding: 50px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+        }
+
+        /* Kartları Link Yaptığımız İçin Stil Ayarı */
+        .user-link {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .user-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border: 1px solid rgba(108, 99, 255, 0.2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+            .user-card:hover {
+                background: rgba(108, 99, 255, 0.15);
+                transform: translateX(8px);
+                border-color: #6c63ff;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            }
+
+        .avatar {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(45deg, #6c63ff, #00d2ff);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            box-shadow: 0 2px 10px rgba(108, 99, 255, 0.4);
+        }
+
+        .back-link {
+            color: #00d2ff;
+            text-decoration: none;
+            font-size: 14px;
+            margin-bottom: 25px;
+            display: inline-block;
+            transition: 0.2s;
+        }
+
+            .back-link:hover {
+                text-decoration: underline;
+                opacity: 0.8;
+            }
+
+        .user-info b {
+            display: block;
+            color: #00d2ff;
+            font-size: 16px;
+        }
+
+        .user-info span {
+            font-size: 12px;
+            color: #aaa;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/Home/UserDashboard" class="back-link">← Akışa Geri Dön</a>
+        <h2 style="margin-bottom: 25px; font-weight: 300;">
+            🔍 <span style="color: #6c63ff;">"@ViewBag.SearchTerm"</span> için sonuçlar
+        </h2>
+
+        @if (Model == null || !Model.Any())
+        {
+            <div style="text-align: center; opacity: 0.5; margin-top: 50px; border: 1px dashed rgba(255,255,255,0.2); padding: 30px; border-radius: 15px;">
+                <p>Aradığınız kriterde bir kullanıcı bulunamadı.</p>
+                <small>Farklı bir isim denemeye ne dersin?</small>
+            </div>
+        }
+        else
+        {
+            @foreach (var user in Model)
+            {
+                <a href="/Home/UserProfile/@user.Id" class="user-link">
+                    <div class="user-card">
+                        <div class="avatar">👤</div>
+                        <div class="user-info" style="flex: 1;">
+                            <b>@@@user.Username</b>
+                            <span>📍 @(user.City ?? "Şehir Belirtilmemiş") | 🎂 @user.Age Yaş</span>
+                        </div>
+                        <div style="font-size: 20px; color: #6c63ff; padding-right: 5px;">›</div>
+                    </div>
+                </a>
+            }
+        }
+    </div>
+</body>
+</html>

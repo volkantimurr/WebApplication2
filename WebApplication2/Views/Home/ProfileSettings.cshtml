@@ -1,0 +1,167 @@
+﻿@model WebApplication2.Models.User
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Profil Ayarları</title>
+    <style>
+        /* Tüm sayfanın arka planını karanlık tema yapar */
+        body {
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: 'Segoe UI', sans-serif;
+            color: white;
+        }
+
+        .settings-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 40px;
+            border-radius: 25px;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255,255,255,0.1);
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+        }
+
+        h2 {
+            text-align: center;
+            margin-top: 0;
+            color: #6c63ff;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #6c63ff;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(0,0,0,0.3);
+            color: white;
+            box-sizing: border-box;
+            outline: none;
+            transition: 0.3s ease;
+        }
+
+            input:focus, select:focus, textarea:focus {
+                border-color: #6c63ff;
+                background: rgba(0,0,0,0.5);
+                box-shadow: 0 0 8px rgba(108, 99, 255, 0.3);
+            }
+
+        /* Select içindeki optionların görünür olması için */
+        option {
+            background-color: #16213e;
+            color: white;
+        }
+
+        .btn-save {
+            background: #6c63ff;
+            color: white;
+            border: none;
+            padding: 14px 25px;
+            border-radius: 12px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+            font-weight: bold;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+
+            .btn-save:hover {
+                background: #574fd6;
+                transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(108, 99, 255, 0.4);
+            }
+
+        .back-link {
+            display: block;
+            margin-top: 20px;
+            text-align: center;
+            color: #8a8aab;
+            text-decoration: none;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+
+            .back-link:hover {
+                color: white;
+            }
+
+        .text-danger {
+            color: #ff4757;
+            font-size: 12px;
+            margin-top: 5px;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="settings-card">
+        <h2>⚙️ Profili Düzenle</h2>
+
+        <form asp-controller="Home" asp-action="UpdateProfile" method="post">
+            <input type="hidden" asp-for="Id" />
+
+            <div class="form-group">
+                <label>Şehir</label>
+                <input type="text" asp-for="City" placeholder="Hangi şehirdesin?" />
+                <span asp-validation-for="City" class="text-danger"></span>
+            </div>
+
+            <div class="form-group" style="display: flex; gap: 15px;">
+                <div style="flex: 1;">
+                    <label>Yaş</label>
+                    <input type="number" asp-for="Age" placeholder="0" />
+                    <span asp-validation-for="Age" class="text-danger"></span>
+                </div>
+                <div style="flex: 1;">
+                    <label>Cinsiyet</label>
+                    <select asp-for="Gender">
+                        <option value="">Seçiniz</option>
+                        <option value="Erkek">Erkek</option>
+                        <option value="Kadın">Kadın</option>
+                    </select>
+                    <span asp-validation-for="Gender" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Hakkımda</label>
+                <textarea asp-for="About" rows="3" placeholder="Kendinden bahset..."></textarea>
+                <span asp-validation-for="About" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn-save">Değişiklikleri Kaydet</button>
+            <a href="/Home/UserDashboard" class="back-link">← Vazgeç ve Geri Dön</a>
+        </form>
+    </div>
+
+</body>
+</html>
